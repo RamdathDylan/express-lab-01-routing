@@ -22,7 +22,9 @@ app.get("/", (req, res) => {
 // Task 1: Health Check Endpoint
 // CREATE GET /health
 app.get("/health", (req, res) => {
-  // Return JSON: { status: "ok" }
+  res.json({
+    status: "ok"
+  })
 });
 
 // TASK 2: User Routes
@@ -32,20 +34,44 @@ const users = [
 ];
 
 app.get("/users", (req, res) => {
-  // Return all users
-});
+   res.json([{
+    "id": 1,
+    "name": "Alice"
+   },{
+    "id": 2,
+    "name": "Bob"
+   }
+  ]);
+   });
 
 app.get("/users/:id", (req, res) => {
   // 1. Get ID from req.params
+  const userId = parseInt(req.params.id);
   // 2. Find user in array
+  const user = users.find((user) => user.id === userId);
   // 3. Return user or 404 if not found
+  if(user){
+    res.json(user);
+  }else{
+    res.status(404).json({ error: "User not found" });
+  }
 });
 
 // TASK 3: Message Submission
 app.post("/messages", (req, res) => {
   // 1. Get text from req.body
+  const {text} = req.body;
   // 2. Validate text exists
+  if(!text){
+    return res.status(400)
+  }
   // 3. Return JSON with:
+  return res.json({
+    id: Math.floor(Math.random() * 1000),
+    text: text,
+    status: "received"
+
+  })
   //    - Generated ID (number)
   //    - Original text
   //    - status: "received"
